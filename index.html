@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EDICTED // Scientist Notes Mode - The Unified Knowledge Platform</title>
-  <meta name="description" content="Rigorous scientific compendium and interactive laboratory platform synthesized from 'Wissenschaft notieren' and 'Edicted'.">
+  <title>EDICTED // 10,000-Year Einstein Chrono-Diary & Mentat Platform</title>
+  <meta name="description" content="Futuristic 10,000-Year Einstein & Dune Mentat Chrono-Diary: Spacetime Consciousness, Deep Reinforcement & The Ego-Retention Palace.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,32 +20,41 @@
 </head>
 <body>
 
+  <!-- Floating Ambient Particles (Spice / Quantum Dust) -->
+  <canvas id="particle-canvas"></canvas>
+
   <div class="app-container">
-    <!-- Sidebar Navigation -->
+    <!-- Futuristic HUD Sidebar -->
     <aside class="sidebar">
       <div class="brand-section">
         <div class="brand-logo">Ψ</div>
         <div>
           <h1 class="brand-title">EDICTED</h1>
-          <div class="brand-subtitle">Scientist Notes Mode</div>
+          <div class="brand-subtitle">Einstein Chrono-Diary</div>
         </div>
       </div>
 
       <div class="nav-group">
-        <div class="nav-heading">Lab Stations</div>
+        <div class="nav-heading">
+          <span>HUD STATIONS</span>
+          <span style="color: var(--accent-gold);">T+10K</span>
+        </div>
         <a href="#lab-station" class="nav-link">
-          <span>🧪 Interactive Simulators</span>
+          <span>🧪 Mentat Simulators</span>
         </a>
         <a href="#archetypes-section" class="nav-link">
           <span>🏛️ Archetypes Matrix</span>
         </a>
         <a href="#rules-section" class="nav-link">
-          <span>⚖️ The 37 Edicts Codex</span>
+          <span>⚖️ 37 Edicts Codex</span>
         </a>
       </div>
 
       <div class="nav-group">
-        <div class="nav-heading">Categorized Modules</div>
+        <div class="nav-heading">
+          <span>CHRONO ARCHIVES</span>
+          <span style="color: var(--accent-cyan);">SECTORS</span>
+        </div>
         <div id="categories-nav-list">
           <!-- Populated by JavaScript -->
         </div>
@@ -54,11 +63,11 @@
       <!-- Audio Binaural Focus Generator -->
       <div class="audio-control-box">
         <div class="audio-header">
-          <span>🎧 BINAURAL WAVES</span>
+          <span>🎧 BINAURAL SPICE</span>
           <span style="font-size: 0.65rem; color: var(--accent-cyan);">40Hz GAMMA</span>
         </div>
         <button id="audio-play-btn" class="audio-btn">
-          <span>▶️ Play Focus Waves (40Hz)</span>
+          <span id="audio-btn-text">▶️ Play Focus Waves (40Hz)</span>
         </button>
       </div>
     </aside>
@@ -70,35 +79,43 @@
       <header class="top-toolbar">
         <div class="search-box">
           <span class="search-icon">🔍</span>
-          <input type="text" id="global-search-input" class="search-input" placeholder="Search equations, archetypes, rules, poems, quantum models...">
+          <input type="text" id="global-search-input" class="search-input" placeholder="Search equations, archetypes, rules, quantum models...">
         </div>
 
         <div class="toolbar-actions">
+          <button id="lang-toggle-btn" class="lang-switch-btn">
+            🌐 EN | DE
+          </button>
           <button id="theme-toggle-btn" class="theme-select-btn">
             <span>🎨 Theme:</span>
-            <span id="current-theme-label" style="color: var(--accent-cyan); font-weight: 600;">Deep Space</span>
+            <span id="current-theme-label" style="color: var(--accent-gold); font-weight: 700;">Obsidian Void</span>
           </button>
           <a href="Edicted_Scientist_Notes_Complete.pdf" download class="btn-primary">
-            <span>📥 Download Clean PDF</span>
+            <span id="pdf-download-text">📥 Download Clean PDF</span>
           </a>
         </div>
       </header>
 
-      <!-- Hero Lab Station -->
+      <!-- 10,000-Year Chrono Hero Banner -->
       <section class="hero-banner">
-        <h1 class="hero-title">The Unified Scientist Compendium</h1>
-        <p class="hero-subtitle">
-          An exhaustive, mathematically rigorous synthesis of <strong>Wissenschaft notieren</strong> (Handwritten Field Notebook) and <strong>Edicted</strong> (Unified Manuscript). Spanning Theoretical Neurophysics, Reinforcement Learning, The Ego-Retention Palace, and Cybernetic Edicts.
+        <div id="hero-chrono-stamp" class="chrono-stamp">
+          STARDATE: 12194.8 // 10,000-YEAR RELATIVISTIC HORIZON
+        </div>
+        <h1 id="hero-main-title" class="hero-title">
+          EDICTED // 10,000-Year Einstein Chrono-Diary
+        </h1>
+        <p id="hero-main-subtitle" class="hero-subtitle">
+          An exhaustive, mathematically formalized synthesis of <strong>Wissenschaft notieren</strong> (Field Research Notebook) and <strong>Edicted</strong> (Unified Manuscript). Spanning Relativistic Consciousness, Mentat Reinforcement Dynamics, The Ego-Retention Palace, and Cybernetic Laws.
         </p>
 
         <div class="metrics-row">
           <div class="metric-card">
             <div id="metric-articles" class="metric-val">12</div>
-            <div class="metric-label">Scientific Modules</div>
+            <div class="metric-label">Chronicle Treatises</div>
           </div>
           <div class="metric-card">
             <div id="metric-equations" class="metric-val">24</div>
-            <div class="metric-label">Key Formulas & Proofs</div>
+            <div class="metric-label">Spacetime Equations</div>
           </div>
           <div class="metric-card">
             <div id="metric-archetypes" class="metric-val">7</div>
@@ -115,9 +132,9 @@
       <section id="lab-station" class="lab-container">
         <div class="section-header">
           <h2 class="section-title">
-            <span>🧪 Interactive Scientist Laboratory</span>
+            <span>🧪 Mentat Laboratory & Simulators</span>
           </h2>
-          <span class="section-tag">LIVE SIMULATION ENGINES</span>
+          <span class="section-tag">LIVE HUD ENGINES</span>
         </div>
 
         <div class="lab-tabs">
@@ -129,10 +146,10 @@
         <!-- Sim 1: Bellman Habits Formula -->
         <div id="sim-bellman" class="simulator-panel active">
           <div>
-            <h3 style="font-size: 1.1rem; color: var(--accent-cyan); margin-bottom: 0.5rem;">
+            <h3 style="font-size: 1.15rem; color: var(--accent-gold); margin-bottom: 0.5rem;">
               Bellman Habit Dynamics & Dominance Engine
             </h3>
-            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
               Simulates habit automation based on the Bellman equation $V(0) = \max((R_A + \gamma V(0)), (R_B + \gamma V(1)))$. If the measure value exceeds <strong>250</strong>, the habit achieves autonomous dominance.
             </p>
 
@@ -162,10 +179,10 @@
           </div>
 
           <div class="sim-output-box">
-            <div id="bellman-state-result" style="font-size: 0.9rem; margin-bottom: 0.5rem;">
+            <div id="bellman-state-result" style="font-size: 0.95rem; margin-bottom: 0.6rem;">
               <!-- Populated by JS -->
             </div>
-            <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+            <div style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.85rem;">
               Calculated Steady-State Value: <strong id="bellman-v1-calc" style="color: var(--accent-cyan);">500.0</strong> | ΔV: <strong id="bellman-delta-calc" style="color: var(--accent-emerald);">10.0</strong>
             </div>
             <div class="canvas-container">
@@ -177,10 +194,10 @@
         <!-- Sim 2: Synthetic Consciousness C(t) -->
         <div id="sim-consciousness" class="simulator-panel">
           <div>
-            <h3 style="font-size: 1.1rem; color: var(--accent-purple); margin-bottom: 0.5rem;">
+            <h3 style="font-size: 1.15rem; color: var(--accent-purple); margin-bottom: 0.5rem;">
               Synthetic Consciousness State Function C(t)
             </h3>
-            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
               Calculates $C(t) = \sigma(\alpha S + \beta E + \gamma A + \delta R + \xi H(T - \theta))$ to model sensory, experiential error, attention, self-reflection, and stochastic ignition bursts.
             </p>
 
@@ -214,10 +231,10 @@
             <div style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">
               Consciousness Level C(t)
             </div>
-            <div id="consciousness-level-val" style="font-size: 2.5rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-purple); margin: 0.25rem 0;">
+            <div id="consciousness-level-val" style="font-size: 2.6rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-purple); margin: 0.25rem 0; text-shadow: var(--glow-purple);">
               74.2%
             </div>
-            <div id="burst-status-badge" style="font-size: 0.75rem; font-family: var(--font-mono); margin-bottom: 0.5rem;">
+            <div id="burst-status-badge" style="font-size: 0.78rem; font-family: var(--font-mono); margin-bottom: 0.6rem;">
               <!-- Burst status -->
             </div>
             <div class="canvas-container">
@@ -229,10 +246,10 @@
         <!-- Sim 3: General Relativity Time Dilation -->
         <div id="sim-relativity" class="simulator-panel">
           <div>
-            <h3 style="font-size: 1.1rem; color: var(--accent-rose); margin-bottom: 0.5rem;">
+            <h3 style="font-size: 1.15rem; color: var(--accent-rose); margin-bottom: 0.5rem;">
               Schwarzschild Gravitational Time Dilation
             </h3>
-            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
               Calculates proper time dilation factor $t(r) = t_0 / \sqrt{1 - r_s / r}$ near a Schwarzschild black hole horizon.
             </p>
 
@@ -251,11 +268,11 @@
             <div style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">
               Time Dilation Factor (t / t0)
             </div>
-            <div id="val-dilation-factor" style="font-size: 2.2rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-rose); margin: 0.25rem 0;">
+            <div id="val-dilation-factor" style="font-size: 2.4rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-rose); margin: 0.25rem 0; text-shadow: 0 0 20px rgba(251, 113, 133, 0.5);">
               1.414x
             </div>
-            <div style="font-size: 0.78rem; font-family: var(--font-mono); color: var(--text-secondary);">
-              Schwarzschild Radius (rs): <strong id="val-rs-km" style="color: var(--accent-amber);">29.5 km</strong>
+            <div style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--text-secondary);">
+              Schwarzschild Radius (rs): <strong id="val-rs-km" style="color: var(--accent-gold);">29.5 km</strong>
             </div>
             <div class="canvas-container">
               <canvas id="relativity-canvas"></canvas>
@@ -270,7 +287,7 @@
       </div>
 
       <!-- Archetypes Matrix Section -->
-      <section id="archetypes-section" style="margin-bottom: 4rem;">
+      <section id="archetypes-section" style="margin-bottom: 4.5rem;">
         <div class="section-header">
           <h2 class="section-title">
             <span>🏛️ The 7 Master Archetypes Matrix</span>
@@ -283,7 +300,7 @@
       </section>
 
       <!-- Equations Codex Section -->
-      <section style="margin-bottom: 4rem;">
+      <section style="margin-bottom: 4.5rem;">
         <div class="section-header">
           <h2 class="section-title">
             <span>🧮 Mathematical & Computational Equations Directory</span>
@@ -296,14 +313,14 @@
       </section>
 
       <!-- The 37 Rules Codex Section -->
-      <section id="rules-section" style="margin-bottom: 4rem;">
+      <section id="rules-section" style="margin-bottom: 4.5rem;">
         <div class="section-header">
           <h2 class="section-title">
             <span>⚖️ The Codex of the 37 Sacred Edicts</span>
           </h2>
           <span class="section-tag">LAWS OF COGNITIVE SOVEREIGNTY</span>
         </div>
-        <div id="rules-codex-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1rem;">
+        <div id="rules-codex-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.15rem;">
           <!-- Rendered dynamically -->
         </div>
       </section>
@@ -316,7 +333,7 @@
     <div class="modal-content">
       <button id="modal-close-btn" class="modal-close-btn">&times;</button>
       <div style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
-        <h2 id="modal-article-title" style="font-size: 1.6rem; font-weight: 800; color: var(--accent-cyan); margin-bottom: 0.5rem;"></h2>
+        <h2 id="modal-article-title" style="font-size: 1.6rem; font-weight: 800; color: var(--accent-gold); margin-bottom: 0.5rem;"></h2>
         <div id="modal-article-source" style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted);"></div>
       </div>
       <div id="modal-article-body" class="modal-body"></div>

@@ -1,15 +1,15 @@
 // ==========================================================================
-// SCIENTIST NOTES MODE: INTERACTIVE APPLICATION CORE
+// EDICTED: 10,000-YEAR EINSTEIN / DUNE MENTAT INTERACTIVE CORE
+// Complete Bilingual Application (EN / DE) + Particle Canvas & HUD
 // ==========================================================================
+
+let currentLang = localStorage.getItem('scientist_lang') || 'en';
 
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
-  renderMetrics();
-  renderCategoriesNav();
-  renderArticles();
-  renderArchetypes();
-  renderEquationsDirectory();
-  renderRulesCodex();
+  initLanguage();
+  initParticleCanvas();
+  renderApp();
   initSimulators();
   initSearch();
   initAudioEngine();
@@ -17,7 +17,64 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // --------------------------------------------------------------------------
-// 1. Theme Management
+// 1. Language Toggle (EN / DE)
+// --------------------------------------------------------------------------
+function initLanguage() {
+  const langBtn = document.getElementById('lang-toggle-btn');
+  if (langBtn) {
+    langBtn.addEventListener('click', () => {
+      currentLang = currentLang === 'en' ? 'de' : 'en';
+      localStorage.setItem('scientist_lang', currentLang);
+      updateLangButton();
+      renderApp();
+    });
+  }
+  updateLangButton();
+}
+
+function updateLangButton() {
+  const langBtn = document.getElementById('lang-toggle-btn');
+  if (langBtn) {
+    langBtn.textContent = currentLang === 'en' ? '🌐 EN | DE' : '🌐 DE | EN';
+  }
+}
+
+// --------------------------------------------------------------------------
+// 2. Global Render (Bilingual)
+// --------------------------------------------------------------------------
+function renderApp() {
+  renderStaticUIText();
+  renderMetrics();
+  renderCategoriesNav();
+  renderArticles();
+  renderArchetypes();
+  renderEquationsDirectory();
+  renderRulesCodex();
+}
+
+function renderStaticUIText() {
+  const isDe = currentLang === 'de';
+
+  // Hero Texts
+  const titleEl = document.getElementById('hero-main-title');
+  const subEl = document.getElementById('hero-main-subtitle');
+  const chronoEl = document.getElementById('hero-chrono-stamp');
+  const searchInput = document.getElementById('global-search-input');
+  const pdfBtnText = document.getElementById('pdf-download-text');
+  const audioBtnText = document.getElementById('audio-btn-text');
+
+  if (titleEl) titleEl.textContent = SCIENTIFIC_CORPUS.metadata.title[currentLang];
+  if (subEl) subEl.textContent = SCIENTIFIC_CORPUS.metadata.subtitle[currentLang];
+  if (chronoEl) chronoEl.textContent = SCIENTIFIC_CORPUS.metadata.stardate;
+  if (searchInput) searchInput.placeholder = isDe 
+    ? "Gleichungen, Archetypen, Regeln, Quantenmodelle durchsuchen..."
+    : "Search equations, archetypes, rules, quantum models...";
+  if (pdfBtnText) pdfBtnText.textContent = isDe ? "📥 PDF Herunterladen" : "📥 Download Clean PDF";
+  if (audioBtnText) audioBtnText.textContent = isDe ? "▶️ 40Hz Fokus-Wellen Abspielen" : "▶️ Play Focus Waves (40Hz)";
+}
+
+// --------------------------------------------------------------------------
+// 3. Theme Management
 // --------------------------------------------------------------------------
 function initTheme() {
   const savedTheme = localStorage.getItem('scientist_theme') || 'deepspace';
@@ -42,9 +99,8 @@ function setTheme(theme) {
   localStorage.setItem('scientist_theme', theme);
   const themeLabel = document.getElementById('current-theme-label');
   if (themeLabel) {
-    themeLabel.textContent = theme === 'deepspace' ? 'Deep Space' : theme === 'parchment' ? 'Parchment Lab' : 'Quantum Matrix';
+    themeLabel.textContent = theme === 'deepspace' ? 'Obsidian Void' : theme === 'parchment' ? 'Arrakis Gold' : 'Mentat Matrix';
   }
-  // Re-draw simulator charts with current theme colors
   setTimeout(() => {
     updateBellmanSim();
     updateConsciousnessSim();
@@ -53,22 +109,17 @@ function setTheme(theme) {
 }
 
 // --------------------------------------------------------------------------
-// 2. Metrics & Stats
+// 4. Metrics & Stats
 // --------------------------------------------------------------------------
 function renderMetrics() {
-  const totalArticles = SCIENTIFIC_CORPUS.articles.length;
-  const totalRules = SCIENTIFIC_CORPUS.metadata.totalRules;
-  const totalArchetypes = SCIENTIFIC_CORPUS.metadata.totalArchetypes;
-  const totalEquations = SCIENTIFIC_CORPUS.equationsDirectory.length;
-
-  document.getElementById('metric-articles').textContent = totalArticles;
-  document.getElementById('metric-rules').textContent = totalRules;
-  document.getElementById('metric-archetypes').textContent = totalArchetypes;
-  document.getElementById('metric-equations').textContent = totalEquations;
+  document.getElementById('metric-articles').textContent = SCIENTIFIC_CORPUS.articles.length;
+  document.getElementById('metric-rules').textContent = SCIENTIFIC_CORPUS.metadata.totalRules;
+  document.getElementById('metric-archetypes').textContent = SCIENTIFIC_CORPUS.metadata.totalArchetypes;
+  document.getElementById('metric-equations').textContent = SCIENTIFIC_CORPUS.equationsDirectory.length;
 }
 
 // --------------------------------------------------------------------------
-// 3. Navigation
+// 5. Sidebar Navigation
 // --------------------------------------------------------------------------
 function renderCategoriesNav() {
   const container = document.getElementById('categories-nav-list');
@@ -76,9 +127,10 @@ function renderCategoriesNav() {
 
   container.innerHTML = SCIENTIFIC_CORPUS.categories.map(cat => {
     const count = SCIENTIFIC_CORPUS.articles.filter(a => a.categoryId === cat.id).length;
+    const catName = cat.name[currentLang] || cat.name.en;
     return `
       <a href="#cat-${cat.id}" class="nav-link">
-        <span>${cat.name}</span>
+        <span>${cat.icon} ${catName}</span>
         <span class="badge">${count}</span>
       </a>
     `;
@@ -86,7 +138,7 @@ function renderCategoriesNav() {
 }
 
 // --------------------------------------------------------------------------
-// 4. Articles Grid Rendering
+// 6. Articles Grid Rendering
 // --------------------------------------------------------------------------
 function renderArticles(filterQuery = '') {
   const container = document.getElementById('modules-container');
@@ -98,39 +150,44 @@ function renderArticles(filterQuery = '') {
     const categoryArticles = SCIENTIFIC_CORPUS.articles.filter(art => {
       if (art.categoryId !== cat.id) return false;
       if (!q) return true;
-      return (
-        art.title.toLowerCase().includes(q) ||
-        art.summary.toLowerCase().includes(q) ||
-        art.tags.some(t => t.toLowerCase().includes(q))
-      );
+      const title = (art.title[currentLang] || art.title.en).toLowerCase();
+      const summary = (art.summary[currentLang] || art.summary.en).toLowerCase();
+      return title.includes(q) || summary.includes(q) || art.tags.some(t => t.toLowerCase().includes(q));
     });
 
     if (categoryArticles.length === 0) return '';
 
-    const cardsHtml = categoryArticles.map(art => `
-      <div class="article-card" data-article-id="${art.id}" onclick="openArticleModal('${art.id}')">
-        <div class="card-top">
-          <span class="card-badge">${cat.badge}</span>
-          <span class="card-source">${art.sourceReference.split(';')[0]}</span>
+    const catName = cat.name[currentLang] || cat.name.en;
+
+    const cardsHtml = categoryArticles.map(art => {
+      const artTitle = art.title[currentLang] || art.title.en;
+      const artSummary = art.summary[currentLang] || art.summary.en;
+
+      return `
+        <div class="article-card" data-article-id="${art.id}" onclick="openArticleModal('${art.id}')">
+          <div class="card-top">
+            <span class="card-badge">${cat.badge}</span>
+            <span class="card-source">${art.sourceReference.split(';')[0]}</span>
+          </div>
+          <h3 class="card-title">${artTitle}</h3>
+          <p class="card-summary">${artSummary}</p>
+          <div class="card-equation-box">
+            $$${art.keyEquation}$$
+          </div>
+          <div class="card-tags">
+            ${art.tags.map(t => `<span class="card-tag-pill">#${t}</span>`).join('')}
+          </div>
         </div>
-        <h3 class="card-title">${art.title}</h3>
-        <p class="card-summary">${art.summary}</p>
-        <div class="card-equation-box" id="eq-preview-${art.id}">
-          $$${art.keyEquation}$$
-        </div>
-        <div class="card-tags">
-          ${art.tags.map(t => `<span class="card-tag-pill">#${t}</span>`).join('')}
-        </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
 
     return `
-      <section id="cat-${cat.id}" class="category-section">
+      <section id="cat-${cat.id}" class="category-section" style="margin-bottom: 3.5rem;">
         <div class="section-header">
           <h2 class="section-title">
-            <span>${cat.name}</span>
+            <span>${cat.icon} ${catName}</span>
           </h2>
-          <span class="section-tag">${cat.badge} // ${categoryArticles.length} Treatises</span>
+          <span class="section-tag">${cat.badge} // ${categoryArticles.length} ${currentLang === 'de' ? 'Traktate' : 'Treatises'}</span>
         </div>
         <div class="cards-grid">
           ${cardsHtml}
@@ -143,68 +200,80 @@ function renderArticles(filterQuery = '') {
 }
 
 // --------------------------------------------------------------------------
-// 5. Archetypes Matrix
+// 7. Archetypes Matrix
 // --------------------------------------------------------------------------
 function renderArchetypes() {
   const container = document.getElementById('archetypes-container');
   if (!container) return;
 
-  container.innerHTML = SCIENTIFIC_CORPUS.archetypesDirectory.map(arch => `
-    <div class="archetype-card" style="border-top: 3px solid ${arch.color}">
-      <div class="archetype-header">
-        <span class="archetype-icon">${arch.symbol}</span>
-        <div>
-          <h3 class="archetype-title" style="color: ${arch.color}">${arch.title}</h3>
-          <span class="archetype-tagline">${arch.tagline}</span>
+  container.innerHTML = SCIENTIFIC_CORPUS.archetypesDirectory.map(arch => {
+    const title = arch.title[currentLang] || arch.title.en;
+    const tagline = arch.tagline[currentLang] || arch.tagline.en;
+    const palace = arch.palaceRoom[currentLang] || arch.palaceRoom.en;
+    const desc = arch.description[currentLang] || arch.description.en;
+    const traits = arch.traits[currentLang] || arch.traits.en;
+    const rules = arch.rules[currentLang] || arch.rules.en;
+
+    return `
+      <div class="archetype-card" style="border-top: 3px solid ${arch.color}">
+        <div class="archetype-header">
+          <span class="archetype-icon">${arch.symbol}</span>
+          <div>
+            <h3 class="archetype-title" style="color: ${arch.color}">${title}</h3>
+            <span class="archetype-tagline">${tagline}</span>
+          </div>
+        </div>
+        <div class="palace-pill">🏛️ ${currentLang === 'de' ? 'Palast-Kammer' : 'Palace Chamber'}: ${palace}</div>
+        <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+          ${desc}
+        </p>
+        <div style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">
+          ${currentLang === 'de' ? 'Kernattribute' : 'Core Attributes'}
+        </div>
+        <ul class="traits-list">
+          ${traits.map(t => `<li>${t}</li>`).join('')}
+        </ul>
+        <div style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">
+          ${currentLang === 'de' ? 'Handlungs-Edikt' : 'Behavioral Directive'}
+        </div>
+        <div style="font-size: 0.82rem; font-style: italic; color: var(--text-primary); background: rgba(0,0,0,0.3); padding: 0.6rem 0.85rem; border-radius: 6px; border-left: 2px solid ${arch.color}">
+          "${rules[0]}"
         </div>
       </div>
-      <div class="palace-pill">🏛️ Palace Chamber: ${arch.palaceRoom}</div>
-      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
-        ${arch.description}
-      </p>
-      <div style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">
-        Core Attributes
-      </div>
-      <ul class="traits-list">
-        ${arch.traits.map(t => `<li>${t}</li>`).join('')}
-      </ul>
-      <div style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">
-        Behavioral Directives
-      </div>
-      <div style="font-size: 0.8rem; font-style: italic; color: var(--text-primary); background: rgba(0,0,0,0.2); padding: 0.5rem 0.75rem; border-radius: 4px; border-left: 2px solid ${arch.color}">
-        "${arch.rules[0]}"
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 // --------------------------------------------------------------------------
-// 6. Equations Codex Directory
+// 8. Equations Directory
 // --------------------------------------------------------------------------
 function renderEquationsDirectory() {
   const container = document.getElementById('equations-codex-container');
   if (!container) return;
 
-  container.innerHTML = SCIENTIFIC_CORPUS.equationsDirectory.map(eq => `
-    <div class="article-card" style="padding: 1.25rem;">
-      <div class="card-top">
-        <span class="card-badge">${eq.category}</span>
-        <span class="card-source">${eq.name}</span>
+  container.innerHTML = SCIENTIFIC_CORPUS.equationsDirectory.map(eq => {
+    const desc = eq.description[currentLang] || eq.description.en;
+    return `
+      <div class="article-card" style="padding: 1.5rem;">
+        <div class="card-top">
+          <span class="card-badge">${eq.category}</span>
+          <span class="card-source">${eq.name}</span>
+        </div>
+        <div class="card-equation-box" style="margin: 0.85rem 0;">
+          $$${eq.latex}$$
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-secondary);">
+          ${desc}
+        </p>
       </div>
-      <div class="card-equation-box" style="margin: 0.75rem 0;">
-        $$${eq.latex}$$
-      </div>
-      <p style="font-size: 0.82rem; color: var(--text-secondary);">
-        ${eq.description}
-      </p>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 
   renderMathInElementSafely(container);
 }
 
 // --------------------------------------------------------------------------
-// 7. 37 Rules Codex
+// 9. 37 Rules Codex
 // --------------------------------------------------------------------------
 function renderRulesCodex() {
   const container = document.getElementById('rules-codex-list');
@@ -213,28 +282,20 @@ function renderRulesCodex() {
   const rulesArticle = SCIENTIFIC_CORPUS.articles.find(a => a.id === 'the-thirty-seven-edicts-codex');
   if (!rulesArticle) return;
 
-  // Extract the list of 37 rules from the article content
-  const lines = rulesArticle.content.split('\n').filter(l => /^\d+\.\s+\*\*/.test(l.trim()));
+  const contentStr = rulesArticle.content[currentLang] || rulesArticle.content.en;
+  const parts = contentStr.split('|').map(s => s.trim()).filter(Boolean);
 
-  container.innerHTML = lines.map(line => {
-    const match = line.trim().match(/^(\d+)\.\s+\*\*(.*?)\*\*:\s*(.*)$/);
-    if (!match) return '';
-    const num = match[1];
-    const title = match[2];
-    const desc = match[3];
+  container.innerHTML = parts.map((part, idx) => {
+    const cleanText = part.replace(/^\d+\.\s*/, '').replace(/###.*?\n/, '').trim();
+    if (!cleanText) return '';
 
     return `
-      <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem 1.25rem; display: flex; gap: 1rem; align-items: flex-start;">
-        <span style="font-family: var(--font-mono); font-size: 1.1rem; font-weight: 800; color: var(--accent-cyan); min-width: 32px;">
-          #${num.padStart(2, '0')}
+      <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.1rem 1.35rem; display: flex; gap: 1rem; align-items: center; box-shadow: var(--shadow-hud);">
+        <span style="font-family: var(--font-mono); font-size: 1.2rem; font-weight: 800; color: var(--accent-gold); min-width: 38px;">
+          #${String(idx + 1).padStart(2, '0')}
         </span>
-        <div>
-          <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem;">
-            ${title}
-          </h4>
-          <p style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">
-            ${desc}
-          </p>
+        <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-primary);">
+          ${cleanText}
         </div>
       </div>
     `;
@@ -242,10 +303,57 @@ function renderRulesCodex() {
 }
 
 // --------------------------------------------------------------------------
-// 8. Interactive Simulators
+// 10. Ambient Particle Canvas (Dune Spice / Quantum Dust)
+// --------------------------------------------------------------------------
+function initParticleCanvas() {
+  const canvas = document.getElementById('particle-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  let width = canvas.width = window.innerWidth;
+  let height = canvas.height = window.innerHeight;
+
+  window.addEventListener('resize', () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  });
+
+  const particles = Array.from({ length: 45 }, () => ({
+    x: Math.random() * width,
+    y: Math.random() * height,
+    radius: Math.random() * 2 + 0.5,
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: (Math.random() - 0.5) * 0.4,
+    alpha: Math.random() * 0.5 + 0.2
+  }));
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if (p.x < 0) p.x = width;
+      if (p.x > width) p.x = 0;
+      if (p.y < 0) p.y = height;
+      if (p.y > height) p.y = 0;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(245, 158, 11, ${p.alpha})`;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+// --------------------------------------------------------------------------
+// 11. Simulators
 // --------------------------------------------------------------------------
 function initSimulators() {
-  // Tab switching
   const tabBtns = document.querySelectorAll('.lab-tab-btn');
   tabBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -260,32 +368,24 @@ function initSimulators() {
       if (targetId === 'sim-bellman') updateBellmanSim();
       if (targetId === 'sim-consciousness') updateConsciousnessSim();
       if (targetId === 'sim-relativity') updateRelativitySim();
-      if (targetId === 'sim-phi') updatePhiSim();
     });
   });
 
-  // Simulator 1: Bellman Habit Controls
-  const gammaSlider = document.getElementById('bellman-gamma');
-  const rewardSlider = document.getElementById('bellman-reward');
-  const userValSlider = document.getElementById('bellman-userval');
+  ['bellman-gamma', 'bellman-reward', 'bellman-userval'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', updateBellmanSim);
+  });
 
-  if (gammaSlider) gammaSlider.addEventListener('input', updateBellmanSim);
-  if (rewardSlider) rewardSlider.addEventListener('input', updateBellmanSim);
-  if (userValSlider) userValSlider.addEventListener('input', updateBellmanSim);
-
-  // Simulator 2: Synthetic Consciousness Controls
   ['sim-s', 'sim-e', 'sim-a', 'sim-r', 'sim-t', 'sim-theta'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', updateConsciousnessSim);
   });
 
-  // Simulator 3: Relativity Controls
-  const rSlider = document.getElementById('rel-r');
-  const massSlider = document.getElementById('rel-mass');
-  if (rSlider) rSlider.addEventListener('input', updateRelativitySim);
-  if (massSlider) massSlider.addEventListener('input', updateRelativitySim);
+  ['rel-r', 'rel-mass'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', updateRelativitySim);
+  });
 
-  // Initial runs
   updateBellmanSim();
   updateConsciousnessSim();
   updateRelativitySim();
@@ -300,22 +400,20 @@ function updateBellmanSim() {
   document.getElementById('val-bellman-reward').textContent = reward.toFixed(1);
   document.getElementById('val-bellman-userval').textContent = userVal.toFixed(0);
 
-  // Steady-state value calculation: V(1) = R / (1 - gamma)
   const v1 = reward / (1.0 - gamma);
-  const v0 = v1 - 2 * reward; // Inactive baseline
+  const v0 = v1 - 2 * reward;
   const isDominant = userVal > 250;
 
   const resultBadge = document.getElementById('bellman-state-result');
   if (resultBadge) {
     resultBadge.innerHTML = isDominant 
-      ? `<span style="color: var(--accent-emerald); font-weight: 700;">🟢 ACTIVE HABIT (DOMINANT, V > 250)</span>`
-      : `<span style="color: var(--accent-rose); font-weight: 700;">🔴 INACTIVE / EXTINCT (V < 250)</span>`;
+      ? `<span style="color: var(--accent-emerald); font-weight: 800;">🟢 ACTIVE HABIT (DOMINANT, V > 250)</span>`
+      : `<span style="color: var(--accent-rose); font-weight: 800;">🔴 INACTIVE / EXTINCT (V < 250)</span>`;
   }
 
   document.getElementById('bellman-v1-calc').textContent = v1.toFixed(1);
   document.getElementById('bellman-delta-calc').textContent = (v1 - v0).toFixed(1);
 
-  // Draw Bellman Dynamics Graph
   drawBellmanCanvas(gamma, reward, userVal, v1);
 }
 
@@ -328,8 +426,8 @@ function drawBellmanCanvas(gamma, reward, userVal, v1) {
 
   ctx.clearRect(0, 0, w, h);
 
-  // Draw Grid Lines
-  ctx.strokeStyle = 'rgba(56, 189, 248, 0.1)';
+  // Grid
+  ctx.strokeStyle = 'rgba(245, 158, 11, 0.12)';
   ctx.lineWidth = 1;
   for (let x = 40; x < w; x += 40) {
     ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h - 30); ctx.stroke();
@@ -338,7 +436,7 @@ function drawBellmanCanvas(gamma, reward, userVal, v1) {
     ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(w, y); ctx.stroke();
   }
 
-  // Draw 250 Threshold Line
+  // 250 Threshold Line
   const threshY = (h - 30) - (250 / 600) * (h - 50);
   ctx.strokeStyle = '#f59e0b';
   ctx.setLineDash([5, 5]);
@@ -352,7 +450,7 @@ function drawBellmanCanvas(gamma, reward, userVal, v1) {
   ctx.font = '11px monospace';
   ctx.fillText('Threshold V=250', 45, threshY - 6);
 
-  // Draw Habit Value Curve over 20 iterations
+  // Curve
   ctx.strokeStyle = '#38bdf8';
   ctx.lineWidth = 3;
   ctx.beginPath();
@@ -366,7 +464,7 @@ function drawBellmanCanvas(gamma, reward, userVal, v1) {
   }
   ctx.stroke();
 
-  // Draw Active Operating Point
+  // Operating Point
   const finalX = w - 20;
   const finalY = (h - 30) - (Math.min(userVal, 600) / 600) * (h - 50);
   ctx.fillStyle = userVal > 250 ? '#10b981' : '#ef4444';
@@ -390,7 +488,6 @@ function updateConsciousnessSim() {
   document.getElementById('val-sim-t').textContent = T.toFixed(2);
   document.getElementById('val-sim-theta').textContent = theta.toFixed(2);
 
-  // Weighted summation
   const alpha = 0.3, beta = 0.25, gamma = 0.25, delta = 0.2, xi = 0.4;
   const burst = (T > theta) ? 1.0 : 0.0;
   const rawZ = alpha * S + beta * E + gamma * A + delta * R + xi * burst - 0.5;
@@ -420,11 +517,10 @@ function drawConsciousnessCanvas(C, burst) {
 
   ctx.clearRect(0, 0, w, h);
 
-  // Draw Waveform
-  ctx.strokeStyle = burst ? '#fbbf24' : '#a78bfa';
+  ctx.strokeStyle = burst ? '#f59e0b' : '#a78bfa';
   ctx.lineWidth = 2.5;
   ctx.beginPath();
-  const freq = 4 + C * 20; // 4 Hz (Theta) to 24 Hz (Beta/Gamma)
+  const freq = 4 + C * 20;
   const amplitude = 20 + C * 50;
 
   for (let x = 0; x < w; x++) {
@@ -436,10 +532,9 @@ function drawConsciousnessCanvas(C, burst) {
   }
   ctx.stroke();
 
-  // Draw 37% Bandwidth Marker
-  ctx.fillStyle = 'rgba(56, 189, 248, 0.7)';
+  ctx.fillStyle = 'rgba(245, 158, 11, 0.8)';
   ctx.font = '11px monospace';
-  ctx.fillText(`C(t) State: ${(C * 100).toFixed(1)}% | Frequency: ${freq.toFixed(1)} Hz`, 15, 25);
+  ctx.fillText(`C(t) State: ${(C * 100).toFixed(1)}% | Wave: ${freq.toFixed(1)} Hz`, 15, 25);
 }
 
 function updateRelativitySim() {
@@ -449,11 +544,9 @@ function updateRelativitySim() {
   document.getElementById('val-rel-r').textContent = rOverRs.toFixed(2) + ' rs';
   document.getElementById('val-rel-mass').textContent = mass.toFixed(0) + ' M☉';
 
-  // Schwarzschild radius: rs = 2.95 km * (M / M_sun)
   const rsKm = 2.95 * mass;
   document.getElementById('val-rs-km').textContent = rsKm.toFixed(1) + ' km';
 
-  // Time dilation: t / t0 = 1 / sqrt(1 - 1 / (r/rs))
   let dilation = 1.0 / Math.sqrt(1.0 - 1.0 / rOverRs);
   if (dilation > 999) dilation = 999;
 
@@ -471,7 +564,6 @@ function drawRelativityCanvas(currentR) {
 
   ctx.clearRect(0, 0, w, h);
 
-  // Draw Event Horizon (r = 1)
   const horizonX = 60;
   ctx.fillStyle = '#000000';
   ctx.fillRect(0, 0, horizonX, h);
@@ -483,7 +575,6 @@ function drawRelativityCanvas(currentR) {
   ctx.font = '10px monospace';
   ctx.fillText('Horizon (rs)', 5, 20);
 
-  // Plot Dilation Curve: x = r/rs (1.05 to 5.0)
   ctx.strokeStyle = '#38bdf8';
   ctx.lineWidth = 2.5;
   ctx.beginPath();
@@ -499,26 +590,18 @@ function drawRelativityCanvas(currentR) {
   }
   ctx.stroke();
 
-  // Draw Current Observer Position
   const obsX = horizonX + ((currentR - 1.0) / 4.0) * (w - horizonX - 20);
   const obsDil = Math.min(1.0 / Math.sqrt(1.0 - 1.0 / currentR), 8.0);
   const obsY = (h - 20) - (obsDil / 8.0) * (h - 40);
 
-  ctx.fillStyle = '#fbbf24';
+  ctx.fillStyle = '#f59e0b';
   ctx.beginPath();
   ctx.arc(obsX, obsY, 6, 0, Math.PI * 2);
   ctx.fill();
 }
 
-function updatePhiSim() {
-  // IIT Phi simulation visualizer
-  const phiVal = (Math.random() * 0.8 + 2.4).toFixed(3);
-  const el = document.getElementById('phi-calc-output');
-  if (el) el.textContent = `Φ = ${phiVal} bits`;
-}
-
 // --------------------------------------------------------------------------
-// 9. Search & Filter
+// 12. Search & Filter
 // --------------------------------------------------------------------------
 function initSearch() {
   const searchInput = document.getElementById('global-search-input');
@@ -530,7 +613,7 @@ function initSearch() {
 }
 
 // --------------------------------------------------------------------------
-// 10. Web Audio Focus Soundscape Engine
+// 13. Web Audio Binaural Engine
 // --------------------------------------------------------------------------
 let audioCtx = null;
 let isAudioPlaying = false;
@@ -543,16 +626,16 @@ function initAudioEngine() {
   btn.addEventListener('click', () => {
     if (!isAudioPlaying) {
       startSoundscape();
-      btn.innerHTML = `<span>⏹️ Stop Focus Waves (40Hz Gamma)</span>`;
+      btn.innerHTML = `<span>⏹️ ${currentLang === 'de' ? 'Fokus-Wellen Stoppen' : 'Stop Focus Waves (40Hz)'}</span>`;
       btn.style.background = 'rgba(239, 68, 68, 0.2)';
       btn.style.borderColor = 'var(--accent-rose)';
       btn.style.color = 'var(--accent-rose)';
     } else {
       stopSoundscape();
-      btn.innerHTML = `<span>▶️ Play Focus Waves (40Hz Gamma)</span>`;
-      btn.style.background = 'rgba(52, 211, 153, 0.15)';
-      btn.style.borderColor = 'var(--accent-emerald)';
-      btn.style.color = 'var(--accent-emerald)';
+      btn.innerHTML = `<span>▶️ ${currentLang === 'de' ? '40Hz Fokus-Wellen Abspielen' : 'Play Focus Waves (40Hz)'}</span>`;
+      btn.style.background = 'rgba(245, 158, 11, 0.15)';
+      btn.style.borderColor = 'var(--accent-gold)';
+      btn.style.color = 'var(--accent-gold)';
     }
   });
 }
@@ -562,37 +645,24 @@ function startSoundscape() {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     audioCtx = new AudioContext();
 
-    // 40Hz Gamma Binaural Beat (Left: 200Hz, Right: 240Hz)
     osc1 = audioCtx.createOscillator();
     osc2 = audioCtx.createOscillator();
     gainNode = audioCtx.createGain();
 
-    const panner1 = audioCtx.createStereoPanner ? audioCtx.createStereoPanner() : null;
-    const panner2 = audioCtx.createStereoPanner ? audioCtx.createStereoPanner() : null;
+    osc1.frequency.setValueAtTime(200, audioCtx.currentTime);
+    osc2.frequency.setValueAtTime(240, audioCtx.currentTime);
 
-    osc1.frequency.setValueAtTime(200, audioCtx.currentTime); // Base Carrier
-    osc2.frequency.setValueAtTime(240, audioCtx.currentTime); // +40Hz Gamma difference
+    osc1.connect(gainNode);
+    osc2.connect(gainNode);
 
-    if (panner1 && panner2) {
-      panner1.pan.setValueAtTime(-1, audioCtx.currentTime);
-      panner2.pan.setValueAtTime(1, audioCtx.currentTime);
-      osc1.connect(panner1);
-      osc2.connect(panner2);
-      panner1.connect(gainNode);
-      panner2.connect(gainNode);
-    } else {
-      osc1.connect(gainNode);
-      osc2.connect(gainNode);
-    }
-
-    gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime); // Soft background volume
+    gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
     gainNode.connect(audioCtx.destination);
 
     osc1.start();
     osc2.start();
     isAudioPlaying = true;
   } catch (err) {
-    console.warn("Audio context not allowed yet:", err);
+    console.warn("Audio context not allowed:", err);
   }
 }
 
@@ -604,7 +674,7 @@ function stopSoundscape() {
 }
 
 // --------------------------------------------------------------------------
-// 11. Modal Reader
+// 14. Modal Reader
 // --------------------------------------------------------------------------
 function initModal() {
   const backdrop = document.getElementById('reader-modal');
@@ -629,11 +699,11 @@ function openArticleModal(articleId) {
   const sourceEl = document.getElementById('modal-article-source');
   const bodyEl = document.getElementById('modal-article-body');
 
-  titleEl.textContent = article.title;
-  sourceEl.textContent = `SOURCE: ${article.sourceReference}`;
+  titleEl.textContent = article.title[currentLang] || article.title.en;
+  sourceEl.textContent = `CHRONO-REF: ${article.sourceReference}`;
 
-  // Simple Markdown-to-HTML parser for modal
-  bodyEl.innerHTML = parseMarkdownToHtml(article.content);
+  const rawContent = article.content[currentLang] || article.content.en;
+  bodyEl.innerHTML = parseMarkdownToHtml(rawContent);
 
   renderMathInElementSafely(bodyEl);
   modal.classList.add('open');
