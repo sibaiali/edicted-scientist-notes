@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDICTED // Scientist Notes Mode - The Unified Knowledge Platform</title>
+  <meta name="description" content="Rigorous scientific compendium and interactive laboratory platform synthesized from 'Wissenschaft notieren' and 'Edicted'.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+
+  <!-- KaTeX for High-Performance Math Formula Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand-section">
+        <div class="brand-logo">Ψ</div>
+        <div>
+          <h1 class="brand-title">EDICTED</h1>
+          <div class="brand-subtitle">Scientist Notes Mode</div>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-heading">Lab Stations</div>
+        <a href="#lab-station" class="nav-link">
+          <span>🧪 Interactive Simulators</span>
+        </a>
+        <a href="#archetypes-section" class="nav-link">
+          <span>🏛️ Archetypes Matrix</span>
+        </a>
+        <a href="#rules-section" class="nav-link">
+          <span>⚖️ The 37 Edicts Codex</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-heading">Categorized Modules</div>
+        <div id="categories-nav-list">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Audio Binaural Focus Generator -->
+      <div class="audio-control-box">
+        <div class="audio-header">
+          <span>🎧 BINAURAL WAVES</span>
+          <span style="font-size: 0.65rem; color: var(--accent-cyan);">40Hz GAMMA</span>
+        </div>
+        <button id="audio-play-btn" class="audio-btn">
+          <span>▶️ Play Focus Waves (40Hz)</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Stream -->
+    <main class="main-content">
+      
+      <!-- Top Scientist Toolbar -->
+      <header class="top-toolbar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="global-search-input" class="search-input" placeholder="Search equations, archetypes, rules, poems, quantum models...">
+        </div>
+
+        <div class="toolbar-actions">
+          <button id="theme-toggle-btn" class="theme-select-btn">
+            <span>🎨 Theme:</span>
+            <span id="current-theme-label" style="color: var(--accent-cyan); font-weight: 600;">Deep Space</span>
+          </button>
+          <a href="Edicted_Scientist_Notes_Complete.pdf" download class="btn-primary">
+            <span>📥 Download Clean PDF</span>
+          </a>
+        </div>
+      </header>
+
+      <!-- Hero Lab Station -->
+      <section class="hero-banner">
+        <h1 class="hero-title">The Unified Scientist Compendium</h1>
+        <p class="hero-subtitle">
+          An exhaustive, mathematically rigorous synthesis of <strong>Wissenschaft notieren</strong> (Handwritten Field Notebook) and <strong>Edicted</strong> (Unified Manuscript). Spanning Theoretical Neurophysics, Reinforcement Learning, The Ego-Retention Palace, and Cybernetic Edicts.
+        </p>
+
+        <div class="metrics-row">
+          <div class="metric-card">
+            <div id="metric-articles" class="metric-val">12</div>
+            <div class="metric-label">Scientific Modules</div>
+          </div>
+          <div class="metric-card">
+            <div id="metric-equations" class="metric-val">24</div>
+            <div class="metric-label">Key Formulas & Proofs</div>
+          </div>
+          <div class="metric-card">
+            <div id="metric-archetypes" class="metric-val">7</div>
+            <div class="metric-label">Master Archetypes</div>
+          </div>
+          <div class="metric-card">
+            <div id="metric-rules" class="metric-val">37</div>
+            <div class="metric-label">Sacred Cyber Edicts</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interactive Laboratory Section -->
+      <section id="lab-station" class="lab-container">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span>🧪 Interactive Scientist Laboratory</span>
+          </h2>
+          <span class="section-tag">LIVE SIMULATION ENGINES</span>
+        </div>
+
+        <div class="lab-tabs">
+          <button class="lab-tab-btn active" data-target="sim-bellman">1. Bellman Habit Engine (V > 250)</button>
+          <button class="lab-tab-btn" data-target="sim-consciousness">2. Synthetic Consciousness C(t)</button>
+          <button class="lab-tab-btn" data-target="sim-relativity">3. Gravitational Time Dilation t(r)</button>
+        </div>
+
+        <!-- Sim 1: Bellman Habits Formula -->
+        <div id="sim-bellman" class="simulator-panel active">
+          <div>
+            <h3 style="font-size: 1.1rem; color: var(--accent-cyan); margin-bottom: 0.5rem;">
+              Bellman Habit Dynamics & Dominance Engine
+            </h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+              Simulates habit automation based on the Bellman equation $V(0) = \max((R_A + \gamma V(0)), (R_B + \gamma V(1)))$. If the measure value exceeds <strong>250</strong>, the habit achieves autonomous dominance.
+            </p>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Discount Factor (γ)</span>
+                <span id="val-bellman-gamma">0.99</span>
+              </div>
+              <input type="range" id="bellman-gamma" class="control-slider" min="0.80" max="0.99" step="0.01" value="0.99">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Primary Reward (R)</span>
+                <span id="val-bellman-reward">5.0</span>
+              </div>
+              <input type="range" id="bellman-reward" class="control-slider" min="1.0" max="15.0" step="0.5" value="5.0">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>User Measure Value</span>
+                <span id="val-bellman-userval">280</span>
+              </div>
+              <input type="range" id="bellman-userval" class="control-slider" min="50" max="500" step="5" value="280">
+            </div>
+          </div>
+
+          <div class="sim-output-box">
+            <div id="bellman-state-result" style="font-size: 0.9rem; margin-bottom: 0.5rem;">
+              <!-- Populated by JS -->
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+              Calculated Steady-State Value: <strong id="bellman-v1-calc" style="color: var(--accent-cyan);">500.0</strong> | ΔV: <strong id="bellman-delta-calc" style="color: var(--accent-emerald);">10.0</strong>
+            </div>
+            <div class="canvas-container">
+              <canvas id="bellman-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sim 2: Synthetic Consciousness C(t) -->
+        <div id="sim-consciousness" class="simulator-panel">
+          <div>
+            <h3 style="font-size: 1.1rem; color: var(--accent-purple); margin-bottom: 0.5rem;">
+              Synthetic Consciousness State Function C(t)
+            </h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+              Calculates $C(t) = \sigma(\alpha S + \beta E + \gamma A + \delta R + \xi H(T - \theta))$ to model sensory, experiential error, attention, self-reflection, and stochastic ignition bursts.
+            </p>
+
+            <div class="control-group">
+              <div class="control-label"><span>Sensory Input (S)</span><span id="val-sim-s">0.80</span></div>
+              <input type="range" id="sim-s" class="control-slider" min="0" max="1" step="0.05" value="0.8">
+            </div>
+            <div class="control-group">
+              <div class="control-label"><span>Cumulative Experience (E)</span><span id="val-sim-e">0.70</span></div>
+              <input type="range" id="sim-e" class="control-slider" min="0" max="1" step="0.05" value="0.7">
+            </div>
+            <div class="control-group">
+              <div class="control-label"><span>Attentional Focus (A)</span><span id="val-sim-a">0.90</span></div>
+              <input type="range" id="sim-a" class="control-slider" min="0" max="1" step="0.05" value="0.9">
+            </div>
+            <div class="control-group">
+              <div class="control-label"><span>Recursive Reflection (R)</span><span id="val-sim-r">0.60</span></div>
+              <input type="range" id="sim-r" class="control-slider" min="0" max="1" step="0.05" value="0.6">
+            </div>
+            <div class="control-group">
+              <div class="control-label"><span>Stochastic Noise (T)</span><span id="val-sim-t">0.40</span></div>
+              <input type="range" id="sim-t" class="control-slider" min="0" max="1" step="0.05" value="0.4">
+            </div>
+            <div class="control-group">
+              <div class="control-label"><span>Ignition Threshold (θ)</span><span id="val-sim-theta">0.50</span></div>
+              <input type="range" id="sim-theta" class="control-slider" min="0" max="1" step="0.05" value="0.5">
+            </div>
+          </div>
+
+          <div class="sim-output-box">
+            <div style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">
+              Consciousness Level C(t)
+            </div>
+            <div id="consciousness-level-val" style="font-size: 2.5rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-purple); margin: 0.25rem 0;">
+              74.2%
+            </div>
+            <div id="burst-status-badge" style="font-size: 0.75rem; font-family: var(--font-mono); margin-bottom: 0.5rem;">
+              <!-- Burst status -->
+            </div>
+            <div class="canvas-container">
+              <canvas id="consciousness-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sim 3: General Relativity Time Dilation -->
+        <div id="sim-relativity" class="simulator-panel">
+          <div>
+            <h3 style="font-size: 1.1rem; color: var(--accent-rose); margin-bottom: 0.5rem;">
+              Schwarzschild Gravitational Time Dilation
+            </h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+              Calculates proper time dilation factor $t(r) = t_0 / \sqrt{1 - r_s / r}$ near a Schwarzschild black hole horizon.
+            </p>
+
+            <div class="control-group">
+              <div class="control-label"><span>Distance to Horizon (r / rs)</span><span id="val-rel-r">2.00 rs</span></div>
+              <input type="range" id="rel-r" class="control-slider" min="1.05" max="5.0" step="0.05" value="2.0">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label"><span>Black Hole Mass (M)</span><span id="val-rel-mass">10 M☉</span></div>
+              <input type="range" id="rel-mass" class="control-slider" min="3" max="100" step="1" value="10">
+            </div>
+          </div>
+
+          <div class="sim-output-box">
+            <div style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase;">
+              Time Dilation Factor (t / t0)
+            </div>
+            <div id="val-dilation-factor" style="font-size: 2.2rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-rose); margin: 0.25rem 0;">
+              1.414x
+            </div>
+            <div style="font-size: 0.78rem; font-family: var(--font-mono); color: var(--text-secondary);">
+              Schwarzschild Radius (rs): <strong id="val-rs-km" style="color: var(--accent-amber);">29.5 km</strong>
+            </div>
+            <div class="canvas-container">
+              <canvas id="relativity-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Modules Container -->
+      <div id="modules-container">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+
+      <!-- Archetypes Matrix Section -->
+      <section id="archetypes-section" style="margin-bottom: 4rem;">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span>🏛️ The 7 Master Archetypes Matrix</span>
+          </h2>
+          <span class="section-tag">SOUL PERSONA TAXONOMY</span>
+        </div>
+        <div id="archetypes-container" class="archetypes-grid">
+          <!-- Rendered dynamically -->
+        </div>
+      </section>
+
+      <!-- Equations Codex Section -->
+      <section style="margin-bottom: 4rem;">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span>🧮 Mathematical & Computational Equations Directory</span>
+          </h2>
+          <span class="section-tag">FORMAL DERIVATIONS</span>
+        </div>
+        <div id="equations-codex-container" class="cards-grid">
+          <!-- Rendered dynamically -->
+        </div>
+      </section>
+
+      <!-- The 37 Rules Codex Section -->
+      <section id="rules-section" style="margin-bottom: 4rem;">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span>⚖️ The Codex of the 37 Sacred Edicts</span>
+          </h2>
+          <span class="section-tag">LAWS OF COGNITIVE SOVEREIGNTY</span>
+        </div>
+        <div id="rules-codex-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1rem;">
+          <!-- Rendered dynamically -->
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Fullscreen Modal Reader -->
+  <div id="reader-modal" class="modal-backdrop">
+    <div class="modal-content">
+      <button id="modal-close-btn" class="modal-close-btn">&times;</button>
+      <div style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+        <h2 id="modal-article-title" style="font-size: 1.6rem; font-weight: 800; color: var(--accent-cyan); margin-bottom: 0.5rem;"></h2>
+        <div id="modal-article-source" style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted);"></div>
+      </div>
+      <div id="modal-article-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Application Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
