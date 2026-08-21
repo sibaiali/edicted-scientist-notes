@@ -1,6 +1,6 @@
 // ==========================================================================
-// EDICTED: 10,000-YEAR EINSTEIN / DUNE MENTAT INTERACTIVE CORE
-// Complete Bilingual Application (EN / DE) + Particle Canvas & HUD
+// EDICTED // 10,000-YEAR DUNE & SPACE OBSERVATORY INTERACTIVE CORE
+// 6 Interactive Visual Simulators + Space Particle Constellations + Bilingual EN/DE
 // ==========================================================================
 
 let currentLang = localStorage.getItem('scientist_lang') || 'en';
@@ -8,7 +8,7 @@ let currentLang = localStorage.getItem('scientist_lang') || 'en';
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initLanguage();
-  initParticleCanvas();
+  initSpaceParticleCanvas();
   renderApp();
   initSimulators();
   initSearch();
@@ -55,7 +55,6 @@ function renderApp() {
 function renderStaticUIText() {
   const isDe = currentLang === 'de';
 
-  // Hero Texts
   const titleEl = document.getElementById('hero-main-title');
   const subEl = document.getElementById('hero-main-subtitle');
   const chronoEl = document.getElementById('hero-chrono-stamp');
@@ -67,8 +66,8 @@ function renderStaticUIText() {
   if (subEl) subEl.textContent = SCIENTIFIC_CORPUS.metadata.subtitle[currentLang];
   if (chronoEl) chronoEl.textContent = SCIENTIFIC_CORPUS.metadata.stardate;
   if (searchInput) searchInput.placeholder = isDe 
-    ? "Gleichungen, Archetypen, Regeln, Quantenmodelle durchsuchen..."
-    : "Search equations, archetypes, rules, quantum models...";
+    ? "Gleichungen, Archetypen, Regeln, Raumzeitmodelle durchsuchen..."
+    : "Search equations, archetypes, rules, spacetime models...";
   if (pdfBtnText) pdfBtnText.textContent = isDe ? "📥 PDF Herunterladen" : "📥 Download Clean PDF";
   if (audioBtnText) audioBtnText.textContent = isDe ? "▶️ 40Hz Fokus-Wellen Abspielen" : "▶️ Play Focus Waves (40Hz)";
 }
@@ -99,17 +98,20 @@ function setTheme(theme) {
   localStorage.setItem('scientist_theme', theme);
   const themeLabel = document.getElementById('current-theme-label');
   if (themeLabel) {
-    themeLabel.textContent = theme === 'deepspace' ? 'Obsidian Void' : theme === 'parchment' ? 'Arrakis Gold' : 'Mentat Matrix';
+    themeLabel.textContent = theme === 'deepspace' ? 'Obsidian Void' : theme === 'parchment' ? 'Arrakis Sun' : 'Mentat Matrix';
   }
   setTimeout(() => {
     updateBellmanSim();
     updateConsciousnessSim();
     updateRelativitySim();
+    updateBrokenMirrorSim();
+    updateCognitiveBandwidthSim();
+    updatePhiNetworkSim();
   }, 100);
 }
 
 // --------------------------------------------------------------------------
-// 4. Metrics & Stats
+// 4. Metrics
 // --------------------------------------------------------------------------
 function renderMetrics() {
   document.getElementById('metric-articles').textContent = SCIENTIFIC_CORPUS.articles.length;
@@ -138,7 +140,7 @@ function renderCategoriesNav() {
 }
 
 // --------------------------------------------------------------------------
-// 6. Articles Grid Rendering
+// 6. Articles Grid
 // --------------------------------------------------------------------------
 function renderArticles(filterQuery = '') {
   const container = document.getElementById('modules-container');
@@ -182,7 +184,7 @@ function renderArticles(filterQuery = '') {
     }).join('');
 
     return `
-      <section id="cat-${cat.id}" class="category-section" style="margin-bottom: 3.5rem;">
+      <section id="cat-${cat.id}" class="category-section" style="margin-bottom: 4rem;">
         <div class="section-header">
           <h2 class="section-title">
             <span>${cat.icon} ${catName}</span>
@@ -215,7 +217,7 @@ function renderArchetypes() {
     const rules = arch.rules[currentLang] || arch.rules.en;
 
     return `
-      <div class="archetype-card" style="border-top: 3px solid ${arch.color}">
+      <div class="archetype-card" style="border-top: 4px solid ${arch.color}">
         <div class="archetype-header">
           <span class="archetype-icon">${arch.symbol}</span>
           <div>
@@ -224,19 +226,19 @@ function renderArchetypes() {
           </div>
         </div>
         <div class="palace-pill">🏛️ ${currentLang === 'de' ? 'Palast-Kammer' : 'Palace Chamber'}: ${palace}</div>
-        <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+        <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 1.35rem; line-height: 1.6;">
           ${desc}
         </p>
-        <div style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">
+        <div style="font-size: 0.75rem; font-family: var(--font-display); color: var(--text-muted); margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em;">
           ${currentLang === 'de' ? 'Kernattribute' : 'Core Attributes'}
         </div>
         <ul class="traits-list">
           ${traits.map(t => `<li>${t}</li>`).join('')}
         </ul>
-        <div style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">
+        <div style="font-size: 0.75rem; font-family: var(--font-display); color: var(--text-muted); margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em;">
           ${currentLang === 'de' ? 'Handlungs-Edikt' : 'Behavioral Directive'}
         </div>
-        <div style="font-size: 0.82rem; font-style: italic; color: var(--text-primary); background: rgba(0,0,0,0.3); padding: 0.6rem 0.85rem; border-radius: 6px; border-left: 2px solid ${arch.color}">
+        <div style="font-size: 0.85rem; font-style: italic; color: var(--text-primary); background: rgba(0,0,0,0.35); padding: 0.75rem 1rem; border-radius: 8px; border-left: 3px solid ${arch.color}">
           "${rules[0]}"
         </div>
       </div>
@@ -254,15 +256,15 @@ function renderEquationsDirectory() {
   container.innerHTML = SCIENTIFIC_CORPUS.equationsDirectory.map(eq => {
     const desc = eq.description[currentLang] || eq.description.en;
     return `
-      <div class="article-card" style="padding: 1.5rem;">
+      <div class="article-card" style="padding: 1.75rem;">
         <div class="card-top">
           <span class="card-badge">${eq.category}</span>
           <span class="card-source">${eq.name}</span>
         </div>
-        <div class="card-equation-box" style="margin: 0.85rem 0;">
+        <div class="card-equation-box" style="margin: 1rem 0;">
           $$${eq.latex}$$
         </div>
-        <p style="font-size: 0.85rem; color: var(--text-secondary);">
+        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.55;">
           ${desc}
         </p>
       </div>
@@ -290,11 +292,11 @@ function renderRulesCodex() {
     if (!cleanText) return '';
 
     return `
-      <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.1rem 1.35rem; display: flex; gap: 1rem; align-items: center; box-shadow: var(--shadow-hud);">
-        <span style="font-family: var(--font-mono); font-size: 1.2rem; font-weight: 800; color: var(--accent-gold); min-width: 38px;">
+      <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem 1.5rem; display: flex; gap: 1.15rem; align-items: center; box-shadow: var(--shadow-hud);">
+        <span style="font-family: var(--font-display); font-size: 1.3rem; font-weight: 900; color: var(--accent-gold); min-width: 42px;">
           #${String(idx + 1).padStart(2, '0')}
         </span>
-        <div style="font-size: 0.92rem; font-weight: 600; color: var(--text-primary);">
+        <div style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">
           ${cleanText}
         </div>
       </div>
@@ -303,9 +305,9 @@ function renderRulesCodex() {
 }
 
 // --------------------------------------------------------------------------
-// 10. Ambient Particle Canvas (Dune Spice / Quantum Dust)
+// 10. Space Dust & Constellation Particles
 // --------------------------------------------------------------------------
-function initParticleCanvas() {
+function initSpaceParticleCanvas() {
   const canvas = document.getElementById('particle-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
@@ -318,32 +320,56 @@ function initParticleCanvas() {
     height = canvas.height = window.innerHeight;
   });
 
-  const particles = Array.from({ length: 45 }, () => ({
+  let mouse = { x: null, y: null, radius: 120 };
+  window.addEventListener('mousemove', (e) => {
+    mouse.x = e.x;
+    mouse.y = e.y;
+  });
+
+  const particles = Array.from({ length: 60 }, () => ({
     x: Math.random() * width,
     y: Math.random() * height,
-    radius: Math.random() * 2 + 0.5,
-    vx: (Math.random() - 0.5) * 0.4,
-    vy: (Math.random() - 0.5) * 0.4,
-    alpha: Math.random() * 0.5 + 0.2
+    radius: Math.random() * 2 + 0.8,
+    vx: (Math.random() - 0.5) * 0.45,
+    vy: (Math.random() - 0.5) * 0.45,
+    color: Math.random() > 0.4 ? 'rgba(245, 158, 11, ' : 'rgba(56, 189, 248, '
   }));
 
   function animate() {
     ctx.clearRect(0, 0, width, height);
 
-    particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
+    for (let i = 0; i < particles.length; i++) {
+      const p1 = particles[i];
+      p1.x += p1.vx;
+      p1.y += p1.vy;
 
-      if (p.x < 0) p.x = width;
-      if (p.x > width) p.x = 0;
-      if (p.y < 0) p.y = height;
-      if (p.y > height) p.y = 0;
+      if (p1.x < 0) p1.x = width;
+      if (p1.x > width) p1.x = 0;
+      if (p1.y < 0) p1.y = height;
+      if (p1.y > height) p1.y = 0;
 
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(245, 158, 11, ${p.alpha})`;
+      ctx.arc(p1.x, p1.y, p1.radius, 0, Math.PI * 2);
+      ctx.fillStyle = p1.color + '0.7)';
       ctx.fill();
-    });
+
+      // Connect constellation lines
+      for (let j = i + 1; j < particles.length; j++) {
+        const p2 = particles[j];
+        const dx = p1.x - p2.x;
+        const dy = p1.y - p2.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < 130) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(245, 158, 11, ${0.15 * (1 - dist / 130)})`;
+          ctx.lineWidth = 0.6;
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+        }
+      }
+    }
 
     requestAnimationFrame(animate);
   }
@@ -351,7 +377,7 @@ function initParticleCanvas() {
 }
 
 // --------------------------------------------------------------------------
-// 11. Simulators
+// 11. All 6 Interactive Simulators
 // --------------------------------------------------------------------------
 function initSimulators() {
   const tabBtns = document.querySelectorAll('.lab-tab-btn');
@@ -368,29 +394,58 @@ function initSimulators() {
       if (targetId === 'sim-bellman') updateBellmanSim();
       if (targetId === 'sim-consciousness') updateConsciousnessSim();
       if (targetId === 'sim-relativity') updateRelativitySim();
+      if (targetId === 'sim-broken-mirror') updateBrokenMirrorSim();
+      if (targetId === 'sim-bandwidth') updateCognitiveBandwidthSim();
+      if (targetId === 'sim-phi-network') updatePhiNetworkSim();
     });
   });
 
+  // Simulator 1: Bellman
   ['bellman-gamma', 'bellman-reward', 'bellman-userval'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', updateBellmanSim);
   });
 
+  // Simulator 2: Consciousness C(t)
   ['sim-s', 'sim-e', 'sim-a', 'sim-r', 'sim-t', 'sim-theta'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', updateConsciousnessSim);
   });
 
+  // Simulator 3: Relativity
   ['rel-r', 'rel-mass'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', updateRelativitySim);
   });
 
+  // Simulator 4: Broken Mirror
+  ['bm-t2-slider', 'bm-asym-slider'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', updateBrokenMirrorSim);
+  });
+
+  // Simulator 5: Cognitive Bandwidth
+  const bandSlider = document.getElementById('bandwidth-slider');
+  if (bandSlider) bandSlider.addEventListener('input', updateCognitiveBandwidthSim);
+
+  // Simulator 6: Phi Network
+  ['phi-node1-btn', 'phi-node2-btn', 'phi-node3-btn', 'phi-node4-btn'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.addEventListener('click', () => {
+      btn.classList.toggle('active');
+      updatePhiNetworkSim();
+    });
+  });
+
   updateBellmanSim();
   updateConsciousnessSim();
   updateRelativitySim();
+  updateBrokenMirrorSim();
+  updateCognitiveBandwidthSim();
+  updatePhiNetworkSim();
 }
 
+// --- Sim 1: Bellman ---
 function updateBellmanSim() {
   const gamma = parseFloat(document.getElementById('bellman-gamma')?.value || 0.99);
   const reward = parseFloat(document.getElementById('bellman-reward')?.value || 5.0);
@@ -407,8 +462,8 @@ function updateBellmanSim() {
   const resultBadge = document.getElementById('bellman-state-result');
   if (resultBadge) {
     resultBadge.innerHTML = isDominant 
-      ? `<span style="color: var(--accent-emerald); font-weight: 800;">🟢 ACTIVE HABIT (DOMINANT, V > 250)</span>`
-      : `<span style="color: var(--accent-rose); font-weight: 800;">🔴 INACTIVE / EXTINCT (V < 250)</span>`;
+      ? `<span style="color: var(--accent-emerald); font-weight: 800;">🟢 ${currentLang === 'de' ? 'AKTIVE GEWOHNHEIT (DOMINANT, V > 250)' : 'ACTIVE HABIT (DOMINANT, V > 250)'}</span>`
+      : `<span style="color: var(--accent-rose); font-weight: 800;">🔴 ${currentLang === 'de' ? 'INAKTIV / ERLOSCHEN (V < 250)' : 'INACTIVE / EXTINCT (V < 250)'}</span>`;
   }
 
   document.getElementById('bellman-v1-calc').textContent = v1.toFixed(1);
@@ -422,7 +477,7 @@ function drawBellmanCanvas(gamma, reward, userVal, v1) {
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const w = canvas.width = canvas.parentElement.clientWidth || 400;
-  const h = canvas.height = 220;
+  const h = canvas.height = 240;
 
   ctx.clearRect(0, 0, w, h);
 
@@ -436,7 +491,7 @@ function drawBellmanCanvas(gamma, reward, userVal, v1) {
     ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(w, y); ctx.stroke();
   }
 
-  // 250 Threshold Line
+  // Threshold V=250
   const threshY = (h - 30) - (250 / 600) * (h - 50);
   ctx.strokeStyle = '#f59e0b';
   ctx.setLineDash([5, 5]);
@@ -448,7 +503,7 @@ function drawBellmanCanvas(gamma, reward, userVal, v1) {
 
   ctx.fillStyle = '#f59e0b';
   ctx.font = '11px monospace';
-  ctx.fillText('Threshold V=250', 45, threshY - 6);
+  ctx.fillText('Dominance V=250', 45, threshY - 6);
 
   // Curve
   ctx.strokeStyle = '#38bdf8';
@@ -464,15 +519,16 @@ function drawBellmanCanvas(gamma, reward, userVal, v1) {
   }
   ctx.stroke();
 
-  // Operating Point
+  // Operating Dot
   const finalX = w - 20;
   const finalY = (h - 30) - (Math.min(userVal, 600) / 600) * (h - 50);
   ctx.fillStyle = userVal > 250 ? '#10b981' : '#ef4444';
   ctx.beginPath();
-  ctx.arc(finalX, finalY, 6, 0, Math.PI * 2);
+  ctx.arc(finalX, finalY, 7, 0, Math.PI * 2);
   ctx.fill();
 }
 
+// --- Sim 2: Consciousness C(t) ---
 function updateConsciousnessSim() {
   const S = parseFloat(document.getElementById('sim-s')?.value || 0.8);
   const E = parseFloat(document.getElementById('sim-e')?.value || 0.7);
@@ -494,15 +550,13 @@ function updateConsciousnessSim() {
   const C = 1.0 / (1.0 + Math.exp(-3.5 * rawZ));
 
   const valDisplay = document.getElementById('consciousness-level-val');
-  if (valDisplay) {
-    valDisplay.textContent = (C * 100).toFixed(1) + '%';
-  }
+  if (valDisplay) valDisplay.textContent = (C * 100).toFixed(1) + '%';
 
   const burstStatus = document.getElementById('burst-status-badge');
   if (burstStatus) {
     burstStatus.innerHTML = burst > 0 
-      ? `<span style="color: var(--accent-emerald)">⚡ SPONTANEOUS IGNITION ACTIVE (T > θ)</span>`
-      : `<span style="color: var(--text-muted)">💤 QUIESCENT STEADY STATE</span>`;
+      ? `<span style="color: var(--accent-emerald)">⚡ ${currentLang === 'de' ? 'SPONTANE ZÜNDUNG AKTIV (T > θ)' : 'SPONTANEOUS IGNITION ACTIVE (T > θ)'}</span>`
+      : `<span style="color: var(--text-muted)">💤 ${currentLang === 'de' ? 'RUHENDER ZUSTAND' : 'QUIESCENT STEADY STATE'}</span>`;
   }
 
   drawConsciousnessCanvas(C, burst);
@@ -513,30 +567,31 @@ function drawConsciousnessCanvas(C, burst) {
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const w = canvas.width = canvas.parentElement.clientWidth || 400;
-  const h = canvas.height = 220;
+  const h = canvas.height = 240;
 
   ctx.clearRect(0, 0, w, h);
 
-  ctx.strokeStyle = burst ? '#f59e0b' : '#a78bfa';
+  ctx.strokeStyle = burst ? '#f59e0b' : '#a855f7';
   ctx.lineWidth = 2.5;
   ctx.beginPath();
-  const freq = 4 + C * 20;
-  const amplitude = 20 + C * 50;
+  const freq = 4 + C * 22;
+  const amplitude = 20 + C * 55;
 
   for (let x = 0; x < w; x++) {
     const rad = (x / w) * Math.PI * 2 * (freq / 4);
-    const noise = burst ? (Math.random() - 0.5) * 8 : 0;
+    const noise = burst ? (Math.random() - 0.5) * 10 : 0;
     const y = h / 2 + Math.sin(rad) * amplitude + noise;
     if (x === 0) ctx.moveTo(x, y);
     else ctx.lineTo(x, y);
   }
   ctx.stroke();
 
-  ctx.fillStyle = 'rgba(245, 158, 11, 0.8)';
+  ctx.fillStyle = 'rgba(245, 158, 11, 0.85)';
   ctx.font = '11px monospace';
-  ctx.fillText(`C(t) State: ${(C * 100).toFixed(1)}% | Wave: ${freq.toFixed(1)} Hz`, 15, 25);
+  ctx.fillText(`C(t) State: ${(C * 100).toFixed(1)}% | Frequency: ${freq.toFixed(1)} Hz`, 15, 25);
 }
 
+// --- Sim 3: Relativity ---
 function updateRelativitySim() {
   const rOverRs = parseFloat(document.getElementById('rel-r')?.value || 2.0);
   const mass = parseFloat(document.getElementById('rel-mass')?.value || 10.0);
@@ -560,11 +615,11 @@ function drawRelativityCanvas(currentR) {
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const w = canvas.width = canvas.parentElement.clientWidth || 400;
-  const h = canvas.height = 220;
+  const h = canvas.height = 240;
 
   ctx.clearRect(0, 0, w, h);
 
-  const horizonX = 60;
+  const horizonX = 65;
   ctx.fillStyle = '#000000';
   ctx.fillRect(0, 0, horizonX, h);
   ctx.strokeStyle = '#ef4444';
@@ -572,8 +627,8 @@ function drawRelativityCanvas(currentR) {
   ctx.beginPath(); ctx.moveTo(horizonX, 0); ctx.lineTo(horizonX, h); ctx.stroke();
 
   ctx.fillStyle = '#ef4444';
-  ctx.font = '10px monospace';
-  ctx.fillText('Horizon (rs)', 5, 20);
+  ctx.font = '11px monospace';
+  ctx.fillText('Horizon (rs)', 5, 22);
 
   ctx.strokeStyle = '#38bdf8';
   ctx.lineWidth = 2.5;
@@ -596,12 +651,216 @@ function drawRelativityCanvas(currentR) {
 
   ctx.fillStyle = '#f59e0b';
   ctx.beginPath();
-  ctx.arc(obsX, obsY, 6, 0, Math.PI * 2);
+  ctx.arc(obsX, obsY, 7, 0, Math.PI * 2);
   ctx.fill();
 }
 
+// --- Sim 4: Broken Mirror Theory (T1 = 2T2) ---
+function updateBrokenMirrorSim() {
+  const t2Val = parseFloat(document.getElementById('bm-t2-slider')?.value || 1.0);
+  const asym = parseFloat(document.getElementById('bm-asym-slider')?.value || 2.0);
+
+  const t1Calc = asym * t2Val;
+
+  const t2Display = document.getElementById('val-bm-t2');
+  const asymDisplay = document.getElementById('val-bm-asym');
+  const t1Display = document.getElementById('val-bm-t1-calc');
+
+  if (t2Display) t2Display.textContent = t2Val.toFixed(2) + ' sec';
+  if (asymDisplay) asymDisplay.textContent = asym.toFixed(1) + 'x';
+  if (t1Display) t1Display.textContent = t1Calc.toFixed(2) + ' sec';
+
+  drawBrokenMirrorCanvas(t2Val, asym, t1Calc);
+}
+
+function drawBrokenMirrorCanvas(t2, asym, t1) {
+  const canvas = document.getElementById('broken-mirror-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width = canvas.parentElement.clientWidth || 400;
+  const h = canvas.height = 240;
+
+  ctx.clearRect(0, 0, w, h);
+
+  // Draw Primary Observer Wave T1 (Gold)
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  for (let x = 0; x < w; x++) {
+    const y = h * 0.35 + Math.sin((x / w) * Math.PI * 2 * (t1 * 2)) * 30;
+    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Draw Reflected Vacuum Wave T2 (Cyan)
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 2.5;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath();
+  for (let x = 0; x < w; x++) {
+    const y = h * 0.75 + Math.sin((x / w) * Math.PI * 2 * (t2 * 2)) * 30;
+    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Labels
+  ctx.fillStyle = '#f59e0b';
+  ctx.font = '11px monospace';
+  ctx.fillText(`Primary Frame T1: ${t1.toFixed(2)}s (f1 = ${t1 * 2}Hz)`, 15, 25);
+
+  ctx.fillStyle = '#38bdf8';
+  ctx.fillText(`Vacuum Reflected Frame T2: ${t2.toFixed(2)}s (f2 = ${t2 * 2}Hz)`, 15, h * 0.75 - 38);
+}
+
+// --- Sim 5: 37% Cognitive Bandwidth Allocator ---
+function updateCognitiveBandwidthSim() {
+  const activePercent = parseFloat(document.getElementById('bandwidth-slider')?.value || 37);
+  const subPercent = 100 - activePercent;
+
+  const activeDisplay = document.getElementById('val-bandwidth-active');
+  const subDisplay = document.getElementById('val-bandwidth-sub');
+  const statusDisplay = document.getElementById('bandwidth-status-badge');
+
+  if (activeDisplay) activeDisplay.textContent = activePercent.toFixed(0) + '%';
+  if (subDisplay) subDisplay.textContent = subPercent.toFixed(0) + '%';
+
+  const isOptimal = Math.abs(activePercent - 37) <= 4;
+  if (statusDisplay) {
+    statusDisplay.innerHTML = isOptimal
+      ? `<span style="color: var(--accent-emerald); font-weight: 800;">🟢 ${currentLang === 'de' ? 'THERMODYNAMISCHES OPTIMUM (37% AKTIV)' : 'THERMODYNAMIC OPTIMUM (37% ACTIVE)'}</span>`
+      : activePercent > 50
+      ? `<span style="color: var(--accent-rose); font-weight: 800;">🔴 ${currentLang === 'de' ? 'METABOLISCHE ÜBERHITZUNG (>50%)' : 'METABOLIC OVERLOAD (>50%)'}</span>`
+      : `<span style="color: var(--accent-gold); font-weight: 800;">🟡 ${currentLang === 'de' ? 'SUBOPTIMALE DURCHDRINGUNG' : 'SUBOPTIMAL FOCUS'}</span>`;
+  }
+
+  drawCognitiveBandwidthCanvas(activePercent, subPercent);
+}
+
+function drawCognitiveBandwidthCanvas(active, sub) {
+  const canvas = document.getElementById('bandwidth-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width = canvas.parentElement.clientWidth || 400;
+  const h = canvas.height = 240;
+
+  ctx.clearRect(0, 0, w, h);
+
+  const centerX = w / 2;
+  const centerY = h / 2;
+  const radius = 75;
+
+  const activeRad = (active / 100) * Math.PI * 2;
+
+  // Draw 63% Subconscious Arc (Deep Slate / Cyan)
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius, activeRad - Math.PI / 2, Math.PI * 1.5);
+  ctx.lineTo(centerX, centerY);
+  ctx.fillStyle = 'rgba(56, 189, 248, 0.25)';
+  ctx.fill();
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Draw 37% Active Consciousness Arc (Gold)
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius, -Math.PI / 2, activeRad - Math.PI / 2);
+  ctx.lineTo(centerX, centerY);
+  ctx.fillStyle = 'rgba(245, 158, 11, 0.75)';
+  ctx.fill();
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Center Cutout (Doughnut)
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius * 0.45, 0, Math.PI * 2);
+  ctx.fillStyle = '#0c1220';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
+  ctx.stroke();
+
+  ctx.fillStyle = '#f8fafc';
+  ctx.font = '12px Orbitron';
+  ctx.textAlign = 'center';
+  ctx.fillText(`${active}% / ${sub}%`, centerX, centerY + 4);
+}
+
+// --- Sim 6: IIT Phi Network Visualizer ---
+function updatePhiNetworkSim() {
+  const n1 = document.getElementById('phi-node1-btn')?.classList.contains('active') || false;
+  const n2 = document.getElementById('phi-node2-btn')?.classList.contains('active') || false;
+  const n3 = document.getElementById('phi-node3-btn')?.classList.contains('active') || false;
+  const n4 = document.getElementById('phi-node4-btn')?.classList.contains('active') || false;
+
+  const activeNodes = [n1, n2, n3, n4].filter(Boolean).length;
+  let phiValue = 0.0;
+
+  if (activeNodes <= 1) phiValue = 0.0;
+  else if (activeNodes === 2) phiValue = 0.75;
+  else if (activeNodes === 3) phiValue = 1.85;
+  else if (activeNodes === 4) phiValue = 3.64;
+
+  const phiValDisplay = document.getElementById('val-phi-calc');
+  if (phiValDisplay) phiValDisplay.textContent = `Φ = ${phiValue.toFixed(2)} bits`;
+
+  drawPhiNetworkCanvas(n1, n2, n3, n4, phiValue);
+}
+
+function drawPhiNetworkCanvas(n1, n2, n3, n4, phi) {
+  const canvas = document.getElementById('phi-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width = canvas.parentElement.clientWidth || 400;
+  const h = canvas.height = 240;
+
+  ctx.clearRect(0, 0, w, h);
+
+  const nodes = [
+    { x: w * 0.3, y: h * 0.3, active: n1, label: "M1" },
+    { x: w * 0.7, y: h * 0.3, active: n2, label: "M2" },
+    { x: w * 0.7, y: h * 0.7, active: n3, label: "M3" },
+    { x: w * 0.3, y: h * 0.7, active: n4, label: "M4" }
+  ];
+
+  // Draw feedback connections
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      if (nodes[i].active && nodes[j].active) {
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(245, 158, 11, 0.7)';
+        ctx.lineWidth = 2.5;
+        ctx.moveTo(nodes[i].x, nodes[i].y);
+        ctx.lineTo(nodes[j].x, nodes[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Draw Nodes
+  nodes.forEach(node => {
+    ctx.beginPath();
+    ctx.arc(node.x, node.y, 18, 0, Math.PI * 2);
+    ctx.fillStyle = node.active ? '#f59e0b' : 'rgba(255, 255, 255, 0.1)';
+    ctx.fill();
+    ctx.strokeStyle = node.active ? '#ffffff' : 'rgba(255, 255, 255, 0.25)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.fillStyle = node.active ? '#000000' : '#64748b';
+    ctx.font = '10px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(node.label, node.x, node.y + 3);
+  });
+
+  ctx.fillStyle = '#f59e0b';
+  ctx.font = '12px Orbitron';
+  ctx.textAlign = 'left';
+  ctx.fillText(`Integrated Information: Φ = ${phi.toFixed(2)} bits`, 15, 25);
+}
+
 // --------------------------------------------------------------------------
-// 12. Search & Filter
+// 12. Search
 // --------------------------------------------------------------------------
 function initSearch() {
   const searchInput = document.getElementById('global-search-input');
@@ -613,7 +872,7 @@ function initSearch() {
 }
 
 // --------------------------------------------------------------------------
-// 13. Web Audio Binaural Engine
+// 13. Audio Focus Engine
 // --------------------------------------------------------------------------
 let audioCtx = null;
 let isAudioPlaying = false;
@@ -633,7 +892,7 @@ function initAudioEngine() {
     } else {
       stopSoundscape();
       btn.innerHTML = `<span>▶️ ${currentLang === 'de' ? '40Hz Fokus-Wellen Abspielen' : 'Play Focus Waves (40Hz)'}</span>`;
-      btn.style.background = 'rgba(245, 158, 11, 0.15)';
+      btn.style.background = 'rgba(245, 158, 11, 0.18)';
       btn.style.borderColor = 'var(--accent-gold)';
       btn.style.color = 'var(--accent-gold)';
     }
@@ -662,7 +921,7 @@ function startSoundscape() {
     osc2.start();
     isAudioPlaying = true;
   } catch (err) {
-    console.warn("Audio context not allowed:", err);
+    console.warn("Audio error:", err);
   }
 }
 
@@ -737,7 +996,7 @@ function renderMathInElementSafely(element) {
         throwOnError: false
       });
     } catch (e) {
-      console.warn("KaTeX rendering error:", e);
+      console.warn("KaTeX error:", e);
     }
   }
 }
